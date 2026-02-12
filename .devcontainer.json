@@ -4,8 +4,6 @@
     "features": {
         "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {}
     },
-    "updateContentCommand": "npm install",
-    "postCreateCommand": "./scripts/install-typst.sh",
     "customizations": {
         "vscode": {
             "extensions": [
