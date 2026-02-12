@@ -1,0 +1,25 @@
+{
+    "name": "Node.js & TypeScript",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+    "features": {
+        "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {}
+    },
+    "updateContentCommand": "npm install",
+    "postCreateCommand": "./scripts/install-typst.sh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "unifiedjs.vscode-mdx",
+                "streetsidesoftware.code-spell-checker",
+                "astro-build.astro-vscode",
+                "bradlc.vscode-tailwindcss",
+                "streetsidesoftware.code-spell-checker-german",
+                "biomejs.biome"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "zsh",
+                "editor.defaultFormatter": "biomejs.biome"
+            }
+        }
+    }
+}
