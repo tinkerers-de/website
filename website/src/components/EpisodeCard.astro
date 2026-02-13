@@ -1,0 +1,36 @@
+---
+interface Props {
+	number: number;
+	title: string;
+	slug: string;
+	date: Date;
+	description: string;
+	duration: string;
+}
+
+const { number, title, slug, date, description, duration } = Astro.props;
+const formattedDate = date.toLocaleDateString("de-DE", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+const episodeNumber = String(number).padStart(3, "0");
+---
+
+<a href={`/podcast/${slug.replace(/\.mdx?$/, "")}`} class="block group">
+	<article class="card bg-base-200 border border-base-300 transition-all hover:border-primary/50 hover:scale-[1.005]">
+		<div class="card-body p-6">
+			<div class="flex items-baseline gap-3 mb-1">
+				<span class="badge badge-primary badge-sm font-mono">#{episodeNumber}</span>
+				<time class="text-xs text-base-content/40" datetime={date.toISOString()}>
+					{formattedDate}
+				</time>
+				<span class="text-xs text-base-content/30">{duration}</span>
+			</div>
+			<h2 class="card-title text-lg group-hover:text-primary transition-colors">
+				{title}
+			</h2>
+			<p class="text-sm text-base-content/60 line-clamp-2">{description}</p>
+		</div>
+	</article>
+</a>

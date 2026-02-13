@@ -24,7 +24,8 @@ export async function GET({ site }: APIContext) {
 		.map((episode) => {
 			const { title, date, description, duration, audio, chapters, hosts } =
 				episode.data;
-			const episodeUrl = `${siteUrl}/episodes/${episode.id}`;
+			const slug = episode.id.replace(/\.mdx?$/, "");
+			const episodeUrl = `${siteUrl}/podcast/${slug}`;
 
 			const chaptersXml =
 				chapters.length > 0
@@ -71,7 +72,7 @@ export async function GET({ site }: APIContext) {
 		<description>Zwei Softwareentwickler, Michael Heide und Levin Keller, reden ueber KI und AI.</description>
 		<language>de</language>
 		<lastBuildDate>${lastBuildDate}</lastBuildDate>
-		<atom:link href="${siteUrl}/feed.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="${siteUrl}/podcast/feed.xml" rel="self" type="application/rss+xml" />
 
 		<itunes:author>Michael Heide, Levin Keller</itunes:author>
 		<itunes:owner>

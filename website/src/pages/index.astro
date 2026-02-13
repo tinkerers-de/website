@@ -1,0 +1,66 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+
+const episodes = (await getCollection("episodes")).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const latest = episodes[0];
+const latestNumber = latest ? String(latest.data.number).padStart(3, "0") : "";
+const latestDate = latest
+	? latest.data.date.toLocaleDateString("de-DE", {
+			year: "numeric",
+			month: "long",
+			day: "numeric",
+		})
+	: "";
+---
+
+<Layout title="Tinkerers Podcast">
+	<!-- Hero -->
+	<section class="py-16 sm:py-24 text-center">
+		<h1 class="text-5xl sm:text-7xl font-bold tracking-tighter mb-4">
+			Tinkerers
+		</h1>
+		<p class="text-lg sm:text-xl text-base-content/60 max-w-xl mx-auto mb-10">
+			Zwei Softwareentwickler reden ueber KI und AI.<br />
+			Mit Michael Heide und Levin Keller.
+		</p>
+		<div class="flex flex-wrap justify-center gap-3">
+			<a href="/podcast/" class="btn btn-primary">Alle Episoden</a>
+			<a href="/podcast/feed.xml" class="btn btn-outline">RSS Feed</a>
+		</div>
+	</section>
+
+	<!-- Neueste Episode -->
+	{latest && (
+		<section class="pb-16">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-6">
+				Neueste Episode
+			</h2>
+			<a
+				href={`/podcast/${latest.id.replace(/\.mdx?$/, "")}`}
+				class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all hover:scale-[1.01] block"
+			>
+				<div class="card-body">
+					<div class="flex items-baseline gap-3 mb-1">
+						<span class="badge badge-primary badge-sm font-mono">
+							#{latestNumber}
+						</span>
+						<time
+							class="text-xs text-base-content/40"
+							datetime={latest.data.date.toISOString()}
+						>
+							{latestDate}
+						</time>
+						<span class="text-xs text-base-content/30">
+							{latest.data.duration}
+						</span>
+					</div>
+					<h3 class="card-title text-xl">{latest.data.title}</h3>
+					<p class="text-base-content/60">{latest.data.description}</p>
+				</div>
+			</a>
+		</section>
+	)}
+</Layout>

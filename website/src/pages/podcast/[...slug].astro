@@ -7,7 +7,7 @@ import ChapterList from "../../components/ChapterList.astro";
 export async function getStaticPaths() {
 	const episodes = await getCollection("episodes");
 	return episodes.map((episode) => ({
-		params: { slug: episode.id },
+		params: { slug: episode.id.replace(/\.mdx?$/, "") },
 		props: { episode },
 	}));
 }
@@ -28,28 +28,28 @@ const episodeNumber = String(number).padStart(3, "0");
 	<article>
 		<header class="mb-8">
 			<div class="flex items-baseline gap-3 mb-2">
-				<span class="text-xs font-mono text-amber-400">#{episodeNumber}</span>
-				<time class="text-xs text-zinc-500" datetime={date.toISOString()}>
+				<span class="badge badge-primary badge-sm font-mono">#{episodeNumber}</span>
+				<time class="text-xs text-base-content/40" datetime={date.toISOString()}>
 					{formattedDate}
 				</time>
-				<span class="text-xs text-zinc-600">{duration}</span>
+				<span class="text-xs text-base-content/30">{duration}</span>
 			</div>
 			<h1 class="text-3xl font-bold tracking-tight mb-2">{title}</h1>
-			<p class="text-zinc-400">{description}</p>
-			<p class="text-xs text-zinc-600 mt-2">Mit {hosts.join(" & ")}</p>
+			<p class="text-base-content/60">{description}</p>
+			<p class="text-xs text-base-content/30 mt-2">Mit {hosts.join(" & ")}</p>
 		</header>
 
 		<AudioPlayer mp3={audio.mp3.url} m4a={audio.m4a.url} opus={audio.opus.url} />
 
 		<ChapterList chapters={chapters} />
 
-		<div class="mt-10 prose prose-invert prose-zinc prose-headings:text-zinc-100 prose-a:text-amber-400 max-w-none">
+		<div class="mt-10 prose prose-headings:text-base-content prose-a:text-primary max-w-none">
 			<Content />
 		</div>
 	</article>
 
 	<nav class="mt-16">
-		<a href="/" class="text-sm text-zinc-400 hover:text-amber-400 transition-colors">
+		<a href="/podcast/" class="btn btn-ghost btn-sm gap-1">
 			&larr; Alle Episoden
 		</a>
 	</nav>

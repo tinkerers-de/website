@@ -14,19 +14,19 @@ const { chapters } = Astro.props;
 
 {chapters.length > 0 && (
 	<div class="mt-8">
-		<h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-4">Kapitel</h2>
+		<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">Kapitel</h2>
 		<ol class="space-y-1">
 			{chapters.map((chapter) => (
-				<li class="flex items-baseline gap-3 py-1.5 px-2 rounded hover:bg-zinc-900/50 transition-colors">
+				<li class="flex items-baseline gap-3 py-1.5 px-2 rounded hover:bg-base-200 transition-colors">
 					<button
-						class="chapter-btn font-mono text-xs text-amber-400 hover:text-amber-300 shrink-0 cursor-pointer bg-transparent border-none"
+						class="chapter-btn font-mono text-xs text-primary hover:text-primary/80 shrink-0 cursor-pointer bg-transparent border-none"
 						data-time={chapter.time}
 					>
 						{chapter.time}
 					</button>
-					<span class="text-sm text-zinc-300">
+					<span class="text-sm">
 						{chapter.url ? (
-							<a href={chapter.url} target="_blank" rel="noopener noreferrer" class="hover:text-amber-400 transition-colors underline decoration-zinc-700">
+							<a href={chapter.url} target="_blank" rel="noopener noreferrer" class="link link-hover link-primary">
 								{chapter.title}
 							</a>
 						) : (
