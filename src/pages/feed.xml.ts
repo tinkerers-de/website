@@ -1,4 +1,4 @@
-import type { APIRoute } from "astro";
+import type { APIContext } from "astro";
 import { getCollection } from "astro:content";
 
 function escapeXml(str: string): string {
@@ -14,7 +14,7 @@ function toRfc2822(date: Date): string {
 	return date.toUTCString();
 }
 
-export const GET: APIRoute = async ({ site }) => {
+export async function GET({ site }: APIContext) {
 	const siteUrl = site?.toString() ?? "https://tinkerers.de";
 	const episodes = (await getCollection("episodes")).sort(
 		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
