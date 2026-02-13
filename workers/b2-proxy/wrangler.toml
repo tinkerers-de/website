@@ -3,5 +3,5 @@ main = "src/index.ts"
 compatibility_date = "2025-01-01"
 
 [vars]
-B2_BUCKET = "tinkerers-media"
+B2_BUCKET = "tinkerers-podcast"
 B2_REGION = "eu-central-003"
