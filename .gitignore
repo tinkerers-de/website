@@ -23,3 +23,4 @@ episodes/*/encoded/
 
 # Transcripts (generated)
 episodes/*/transcript.json
+episodes/*/transcript_part*.json

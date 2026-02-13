@@ -2,7 +2,9 @@
     "name": "Node.js & TypeScript",
     "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
     "features": {
-        "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {}
+        "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {},
+        "ghcr.io/devcontainers/features/git-lfs:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
     },
     "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ffmpeg",
     "customizations": {
