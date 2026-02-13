@@ -1,4 +1,4 @@
-name = "tinkerers-b2-proxy"
+name = "tinkerers-de-b2-proxy"
 main = "src/index.ts"
 compatibility_date = "2026-02-13"
 compatibility_flags = ["nodejs_compat"]
