@@ -69,7 +69,7 @@ export async function GET({ site }: APIContext) {
 	<channel>
 		<title>Tinkerers Podcast</title>
 		<link>${siteUrl}</link>
-		<description>Zwei Softwareentwickler, Michael Heide und Levin Keller, reden ueber KI und AI.</description>
+		<description>Zwei Softwareentwickler, Michael Heide und Levin Keller, reden übers Tinkering mit AI.</description>
 		<language>de</language>
 		<lastBuildDate>${lastBuildDate}</lastBuildDate>
 		<atom:link href="${siteUrl}/podcast/feed.xml" rel="self" type="application/rss+xml" />
