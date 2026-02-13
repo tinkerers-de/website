@@ -1,0 +1,34 @@
+---
+interface Props {
+	number: number;
+	title: string;
+	slug: string;
+	date: Date;
+	description: string;
+	duration: string;
+}
+
+const { number, title, slug, date, description, duration } = Astro.props;
+const formattedDate = date.toLocaleDateString("de-DE", {
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+const episodeNumber = String(number).padStart(3, "0");
+---
+
+<a href={`/episodes/${slug}`} class="block group">
+	<article class="rounded-lg border border-zinc-800 p-6 transition-colors hover:border-amber-400/50 hover:bg-zinc-900/50">
+		<div class="flex items-baseline gap-3 mb-2">
+			<span class="text-xs font-mono text-amber-400">#{episodeNumber}</span>
+			<time class="text-xs text-zinc-500" datetime={date.toISOString()}>
+				{formattedDate}
+			</time>
+			<span class="text-xs text-zinc-600">{duration}</span>
+		</div>
+		<h2 class="text-lg font-semibold group-hover:text-amber-400 transition-colors">
+			{title}
+		</h2>
+		<p class="mt-2 text-sm text-zinc-400 line-clamp-2">{description}</p>
+	</article>
+</a>

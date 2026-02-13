@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Wrangler
+.wrangler/
+.dev.vars
+
+# Encoded audio (generated, uploaded to B2)
+episodes/*/encoded/
+
+# Transcripts (generated)
+episodes/*/transcript.json

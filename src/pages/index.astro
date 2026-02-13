@@ -1,0 +1,34 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import EpisodeCard from "../components/EpisodeCard.astro";
+
+const episodes = (await getCollection("episodes")).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<Layout title="Tinkerers Podcast">
+	<section class="mb-12">
+		<h1 class="text-3xl font-bold tracking-tight mb-2">Tinkerers</h1>
+		<p class="text-zinc-400">
+			Zwei Softwareentwickler reden ueber KI und AI. Mit Michael Heide und Levin Keller.
+		</p>
+	</section>
+
+	<section>
+		<h2 class="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-6">Episoden</h2>
+		<div class="space-y-4">
+			{episodes.map((episode) => (
+				<EpisodeCard
+					number={episode.data.number}
+					title={episode.data.title}
+					slug={episode.id}
+					date={episode.data.date}
+					description={episode.data.description}
+					duration={episode.data.duration}
+				/>
+			))}
+		</div>
+	</section>
+</Layout>

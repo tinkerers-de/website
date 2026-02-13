@@ -1,0 +1,18 @@
+---
+interface Props {
+	mp3: string;
+	m4a: string;
+	opus: string;
+}
+
+const { mp3, m4a, opus } = Astro.props;
+---
+
+<div class="rounded-lg bg-zinc-900 border border-zinc-800 p-4">
+	<audio id="audio-player" controls preload="metadata" class="w-full">
+		<source src={opus} type="audio/ogg; codecs=opus" />
+		<source src={m4a} type="audio/mp4" />
+		<source src={mp3} type="audio/mpeg" />
+		Dein Browser unterstuetzt kein Audio-Element.
+	</audio>
+</div>
