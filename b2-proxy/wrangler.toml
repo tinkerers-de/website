@@ -1,7 +1,11 @@
 name = "tinkerers-b2-proxy"
 main = "src/index.ts"
-compatibility_date = "2025-01-01"
+compatibility_date = "2026-02-13"
+compatibility_flags = ["nodejs_compat"]
 
 [vars]
 B2_BUCKET = "tinkerers-podcast"
 B2_REGION = "eu-central-003"
+
+[observability]
+enabled = true

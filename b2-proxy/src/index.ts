@@ -4,11 +4,25 @@ interface Env {
 }
 
 const CACHE_TTL = 60 * 60 * 24 * 30; // 30 days
+const CORS_HEADERS = {
+	"Access-Control-Allow-Origin": "*",
+	"Access-Control-Allow-Methods": "GET, HEAD, OPTIONS",
+	"Access-Control-Allow-Headers": "Range",
+	"Access-Control-Expose-Headers": "Content-Length, Content-Range, Accept-Ranges",
+};
 
 export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
+		if (request.method === "OPTIONS") {
+			return new Response(null, { status: 204, headers: CORS_HEADERS });
+		}
+
+		if (request.method !== "GET" && request.method !== "HEAD") {
+			return new Response("Method Not Allowed", { status: 405 });
+		}
+
 		const url = new URL(request.url);
-		const path = url.pathname.slice(1); // remove leading /
+		const path = url.pathname.slice(1);
 
 		if (!path) {
 			return new Response("Not Found", { status: 404 });
@@ -16,44 +30,49 @@ export default {
 
 		const b2Url = `https://${env.B2_BUCKET}.s3.${env.B2_REGION}.backblazeb2.com/${path}`;
 
+		// Use Cloudflare cache API
 		const cacheKey = new Request(b2Url, request);
 		const cache = caches.default;
 
-		let response = await cache.match(cacheKey);
-		if (response) {
-			return response;
+		const cached = await cache.match(cacheKey);
+		if (cached) {
+			return cached;
 		}
 
-		const b2Response = await fetch(b2Url, {
-			headers: {
-				"Accept-Encoding": request.headers.get("Accept-Encoding") ?? "",
-			},
-		});
+		// Forward Range header for audio seeking
+		const fetchHeaders: Record<string, string> = {};
+		const rangeHeader = request.headers.get("Range");
+		if (rangeHeader) {
+			fetchHeaders["Range"] = rangeHeader;
+		}
 
-		if (!b2Response.ok) {
+		const b2Response = await fetch(b2Url, { headers: fetchHeaders });
+
+		if (!b2Response.ok && b2Response.status !== 206) {
 			return new Response("Not Found", { status: 404 });
 		}
 
-		const contentType = b2Response.headers.get("Content-Type") ?? "application/octet-stream";
-		const contentLength = b2Response.headers.get("Content-Length");
+		const headers = new Headers(CORS_HEADERS);
+		headers.set("Cache-Control", `public, max-age=${CACHE_TTL}`);
+		headers.set("Accept-Ranges", "bytes");
 
-		const headers = new Headers({
-			"Content-Type": contentType,
-			"Cache-Control": `public, max-age=${CACHE_TTL}`,
-			"Access-Control-Allow-Origin": "*",
-		});
-
-		if (contentLength) {
-			headers.set("Content-Length", contentLength);
+		// Forward relevant headers from B2
+		for (const key of ["Content-Type", "Content-Length", "Content-Range", "ETag"]) {
+			const value = b2Response.headers.get(key);
+			if (value) {
+				headers.set(key, value);
+			}
 		}
 
-		response = new Response(b2Response.body, {
-			status: 200,
+		const response = new Response(b2Response.body, {
+			status: b2Response.status,
 			headers,
 		});
 
-		// Cache the response
-		await cache.put(cacheKey, response.clone());
+		// Only cache full responses (not partial/206)
+		if (b2Response.status === 200) {
+			await cache.put(cacheKey, response.clone());
+		}
 
 		return response;
 	},
