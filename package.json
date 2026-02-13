@@ -11,7 +11,7 @@
     "check": "astro check && biome check .",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "deploy": "wrangler deploy"
+    "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {
     "astro": "^5.17.2",
