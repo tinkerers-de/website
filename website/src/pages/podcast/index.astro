@@ -10,10 +10,21 @@ const episodes = (await getCollection("episodes")).sort(
 
 <Layout title="Alle Episoden">
 	<section class="mb-12">
-		<h1 class="text-3xl font-bold tracking-tight mb-2">Episoden</h1>
-		<p class="text-base-content/60">
-			Alle Folgen von Tinkerers &mdash; Tinkern mit AI in der Softwareentwicklung.
-		</p>
+		<div class="flex items-center gap-5 mb-4">
+			<img
+				src="/cover-512.jpg"
+				alt="Tinkerers Podcast Cover"
+				width="80"
+				height="80"
+				class="rounded-xl"
+			/>
+			<div>
+				<h1 class="text-3xl font-bold tracking-tight mb-1">Episoden</h1>
+				<p class="text-base-content/60">
+					Alle Folgen von Tinkerers &mdash; Tinkern mit AI in der Softwareentwicklung.
+				</p>
+			</div>
+		</div>
 	</section>
 
 	<section>

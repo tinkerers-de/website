@@ -22,7 +22,7 @@ const {
 	noindex = false,
 } = Astro.props;
 
-const siteTitle = "Tinkerers Podcast";
+const siteTitle = "Tinkerers";
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://tinkerers.de");
 const ogType = og?.type ?? "website";
@@ -34,6 +34,9 @@ const ogImage = og?.image ?? new URL("/og.jpg", Astro.site ?? "https://tinkerers
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+		<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonicalUrl} />
 		<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/podcast/feed.xml" />
