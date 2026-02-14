@@ -28,14 +28,18 @@ export default {
 			return new Response("Not Found", { status: 404 });
 		}
 
+		const isHead = request.method === "HEAD";
 		const b2Url = `https://${env.B2_BUCKET}.s3.${env.B2_REGION}.backblazeb2.com/${path}`;
 
-		// Use Cloudflare cache API
-		const cacheKey = new Request(b2Url, request);
+		// Always use GET for cache key so HEAD requests hit the same cache
+		const cacheKey = new Request(b2Url);
 		const cache = caches.default;
 
 		const cached = await cache.match(cacheKey);
 		if (cached) {
+			if (isHead) {
+				return new Response(null, { status: cached.status, headers: cached.headers });
+			}
 			return cached;
 		}
 
@@ -64,8 +68,7 @@ export default {
 			}
 		}
 
-		const body = request.method === "HEAD" ? null : b2Response.body;
-		const response = new Response(body, {
+		const response = new Response(b2Response.body, {
 			status: b2Response.status,
 			headers,
 		});
@@ -73,6 +76,10 @@ export default {
 		// Only cache full responses (not partial/206)
 		if (b2Response.status === 200) {
 			await cache.put(cacheKey, response.clone());
+		}
+
+		if (isHead) {
+			return new Response(null, { status: response.status, headers: response.headers });
 		}
 
 		return response;
