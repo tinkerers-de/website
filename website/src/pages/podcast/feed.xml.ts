@@ -22,7 +22,7 @@ export async function GET({ site }: APIContext) {
 
 	const items = episodes
 		.map((episode) => {
-			const { title, date, description, duration, audio, chapters, hosts } =
+			const { title, date, description, duration, audio, chapters, tags, hosts } =
 				episode.data;
 			const slug = episode.id.replace(/\.mdx?$/, "");
 			const episodeUrl = `${siteUrl}/podcast/${slug}`;
@@ -45,7 +45,7 @@ export async function GET({ site }: APIContext) {
 			<itunes:summary>${escapeXml(description)}</itunes:summary>
 			<itunes:duration>${duration}</itunes:duration>
 			<itunes:episode>${episode.data.number}</itunes:episode>
-			<itunes:author>${hosts.join(", ")}</itunes:author>
+			<itunes:author>${hosts.join(", ")}</itunes:author>${tags.length > 0 ? `\n\t\t\t<itunes:keywords>${escapeXml(tags.join(", "))}</itunes:keywords>` : ""}
 			<podcast:alternateEnclosure type="audio/ogg; codecs=opus" length="${audio.opus.size}" default="false" title="Opus">
 				<podcast:source uri="${audio.opus.url}" />
 			</podcast:alternateEnclosure>

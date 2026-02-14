@@ -25,6 +25,7 @@ const episodes = defineCollection({
 			opus: audioFile,
 		}),
 		chapters: z.array(chapter).optional().default([]),
+		tags: z.array(z.string()).optional().default([]),
 		hosts: z.array(z.string()).default(["Michael Heide", "Levin Keller"]),
 	}),
 });

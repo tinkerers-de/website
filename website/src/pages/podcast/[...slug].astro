@@ -14,7 +14,7 @@ export async function getStaticPaths() {
 
 const { episode } = Astro.props;
 const { Content } = await render(episode);
-const { title, description, date, duration, audio, chapters, number, hosts } = episode.data;
+const { title, description, date, duration, audio, chapters, tags, number, hosts } = episode.data;
 
 const formattedDate = date.toLocaleDateString("de-DE", {
 	year: "numeric",
@@ -75,6 +75,13 @@ const jsonLd = {
 			<h1 class="text-3xl font-bold tracking-tight mb-2">{title}</h1>
 			<p class="text-base-content/60">{description}</p>
 			<p class="text-xs text-base-content/30 mt-2">Mit {hosts.join(" & ")}</p>
+			{tags.length > 0 && (
+				<div class="flex flex-wrap gap-1.5 mt-3">
+					{tags.map((tag) => (
+						<span class="badge badge-ghost badge-sm">{tag}</span>
+					))}
+				</div>
+			)}
 		</header>
 
 		<AudioPlayer mp3={audio.mp3.url} m4a={audio.m4a.url} opus={audio.opus.url} />
