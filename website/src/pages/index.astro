@@ -6,38 +6,75 @@ import CopyFeedUrl from "../components/CopyFeedUrl.astro";
 const episodes = (await getCollection("episodes")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
-const latest = episodes[0];
-const latestNumber = latest ? String(latest.data.number).padStart(3, "0") : "";
-const latestDate = latest
-	? latest.data.date.toLocaleDateString("de-DE", {
-			year: "numeric",
-			month: "long",
-			day: "numeric",
-		})
-	: "";
+const episodeCount = episodes.length;
 ---
 
-<Layout title="Tinkerers Podcast">
+<Layout title="Tinkerers">
 	<!-- Hero -->
 	<section class="py-16 sm:py-24 text-center">
-		<img
-			src="/cover-512.jpg"
-			alt="Tinkerers Podcast Cover"
-			width="256"
-			height="256"
-			class="mx-auto mb-8 rounded-2xl shadow-xl"
-		/>
 		<h1 class="text-5xl sm:text-7xl font-bold tracking-tighter mb-4">
 			Tinkerers
 		</h1>
-		<p class="text-lg sm:text-xl text-base-content/60 max-w-xl mx-auto mb-10">
-			Zwei Softwareentwickler reden übers Tinkern mit AI.<br />
-			Mit Michael Heide und Levin Keller.
+		<p class="text-lg sm:text-xl text-base-content/60 max-w-xl mx-auto mb-4">
+			Wir bauen Dinge mit AI &mdash; und reden drüber.
 		</p>
-		<div class="flex flex-wrap justify-center gap-3">
-			<a href="/podcast/" class="btn btn-primary">Alle Episoden</a>
+		<p class="text-sm text-base-content/40 max-w-lg mx-auto">
+			Michael Heide und Levin Keller sind zwei Softwareentwickler, die mit
+			KI-Tools experimentieren, Prototypen basteln und herausfinden wollen,
+			was wirklich funktioniert. Kein Hype, sondern Hands-on.
+		</p>
+	</section>
+
+	<!-- Projekte -->
+	<section class="pb-16">
+		<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-6">
+			Projekte
+		</h2>
+
+		<!-- Podcast -->
+		<a
+			href="/podcast/"
+			class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all hover:scale-[1.01] block"
+		>
+			<div class="card-body flex-row items-center gap-6">
+				<img
+					src="/cover-512.jpg"
+					alt="Tinkerers Podcast Cover"
+					width="96"
+					height="96"
+					class="rounded-xl shrink-0"
+				/>
+				<div>
+					<h3 class="card-title text-xl">Der Tinkerers Podcast</h3>
+					<p class="text-base-content/60">
+						Tinkern mit AI in der Softwareentwicklung.
+						{episodeCount} {episodeCount === 1 ? "Episode" : "Episoden"} bisher.
+					</p>
+					<div class="flex gap-3 mt-2">
+						<span class="badge badge-primary badge-sm">Podcast</span>
+						<span class="badge badge-ghost badge-sm">Deutsch</span>
+					</div>
+				</div>
+			</div>
+		</a>
+	</section>
+
+	<!-- Mitmachen -->
+	<section class="pb-16">
+		<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-6">
+			Mitmachen
+		</h2>
+		<div class="flex flex-wrap gap-3">
+			<a
+				href="https://github.com/tinkerers-de/community/discussions"
+				class="btn btn-outline btn-sm"
+				target="_blank"
+				rel="noopener"
+			>
+				Community &rarr;
+			</a>
 			<CopyFeedUrl url="https://tinkerers.de/podcast/feed.xml">
-				<button type="button" class="btn btn-outline gap-2">
+				<button type="button" class="btn btn-outline btn-sm gap-2">
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
 						<path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19 7.38 20 6.18 20C5 20 4 19 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1Z" />
 					</svg>
@@ -46,36 +83,4 @@ const latestDate = latest
 			</CopyFeedUrl>
 		</div>
 	</section>
-
-	<!-- Neueste Episode -->
-	{latest && (
-		<section class="pb-16">
-			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-6">
-				Neueste Episode
-			</h2>
-			<a
-				href={`/podcast/${latest.id.replace(/\.mdx?$/, "")}`}
-				class="card bg-base-200 border border-base-300 hover:border-primary/50 transition-all hover:scale-[1.01] block"
-			>
-				<div class="card-body">
-					<div class="flex items-baseline gap-3 mb-1">
-						<span class="badge badge-primary badge-sm font-mono">
-							#{latestNumber}
-						</span>
-						<time
-							class="text-xs text-base-content/40"
-							datetime={latest.data.date.toISOString()}
-						>
-							{latestDate}
-						</time>
-						<span class="text-xs text-base-content/30">
-							{latest.data.duration}
-						</span>
-					</div>
-					<h3 class="card-title text-xl">{latest.data.title}</h3>
-					<p class="text-base-content/60">{latest.data.description}</p>
-				</div>
-			</a>
-		</section>
-	)}
 </Layout>

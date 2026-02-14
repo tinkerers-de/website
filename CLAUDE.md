@@ -1,25 +1,43 @@
-# Tinkerers Podcast
+# Tinkerers
 
-Podcast-Plattform für Michael Heide und Levin Keller. Thema: KI/AI in der Softwareentwicklung.
+Community/Plattform von Michael Heide und Levin Keller. Thema: KI/AI in der Softwareentwicklung.
+Tinkerers ist die Dachmarke. Der Podcast ist ein Projekt darunter.
 
 ## Tech-Stack
 
-- **Framework**: Astro 5 (SSR) mit MDX, Tailwind CSS
-- **Hosting**: Cloudflare Workers (`wrangler.toml`)
+- **Framework**: Astro 5 (Static) mit MDX, Tailwind CSS v4, daisyUI v5
+- **Hosting**: Cloudflare Pages (Static Build)
 - **CDN**: Backblaze B2 via Cloudflare Proxy Worker (Bandwidth Alliance = 0€ Egress)
-- **Domain**: tinkerers.de (Webseite), cdn.tinkerers.de (Audio-CDN)
+- **Domain**: tinkerers.de (Webseite), cdn.tinkerers.de (Audio/Bilder-CDN)
 - **Linter/Formatter**: Biome (Tabs, 100 Zeichen)
 - **Git LFS**: Audio-Dateien via custom LFS Proxy (git-lfs.tinkerers.de) → Backblaze B2
+
+## URL-Struktur
+
+```
+/                              → Landing Page (Tinkerers, Projekte, Mitmachen)
+/podcast/                      → Episodenliste
+/podcast/NNN-slug              → Episode-Detailseite
+/podcast/feed.xml              → RSS Feed
+/impressum                     → Impressum
+```
+
+Alles Podcast-bezogene ist unter `/podcast/` gescoped.
+CDN-Pfade ebenfalls: `cdn.tinkerers.de/podcast/cover-3000.jpg`, `cdn.tinkerers.de/episodes/NNN/...`
 
 ## Verzeichnisstruktur
 
 ```
-episodes/NNN/           # Pro Episode: raw/, master.flac, encoded/, transcript.md
-src/content/episodes/   # MDX-Dateien mit Metadaten + Show Notes
-src/pages/              # index.astro, episodes/[...slug].astro, feed.xml.ts
-src/components/         # AudioPlayer, ChapterList, EpisodeCard
-scripts/                # encode-episode.sh, transcribe.sh, upload-to-b2.sh, import-labels.sh
-workers/b2-proxy/       # Cloudflare Worker für B2 CDN Proxy
+website/                    # Astro Website
+  src/pages/                # index.astro (Landing), podcast/, impressum
+  src/components/           # AudioPlayer, ChapterList, EpisodeCard, Navbar, Footer, CopyFeedUrl
+  src/content/episodes/     # MDX-Dateien mit Metadaten + Show Notes
+  src/layouts/              # Layout.astro (SEO, OG, JSON-LD)
+  public/                   # Statische Assets (cover-512.jpg, og.jpg)
+episodes/NNN/               # Pro Episode: raw/, master.flac, encoded/, transcript.md
+artwork/                    # Podcast-Cover Originale + Mood Board
+scripts/                    # encode-episode.sh, transcribe.sh, upload-to-b2.sh, import-labels.sh
+workers/b2-proxy/           # Cloudflare Worker für B2 CDN Proxy
 ```
 
 ## Audio-Formate
@@ -46,6 +64,7 @@ workers/b2-proxy/       # Cloudflare Worker für B2 CDN Proxy
 - Episode-Nummern: Dreistellig mit führenden Nullen (001, 002, ...)
 - Encoded Audio liegt NICHT im Git (in .gitignore), wird zu B2 hochgeladen
 - Raw + Master FLAC liegen in Git LFS
+- Große Bilder (Cover 3000px) auf CDN, kleine (512px, OG) in public/
 - Content Collection Schema: `src/content/config.ts`
 
 ## Commands

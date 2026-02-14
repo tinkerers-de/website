@@ -79,7 +79,7 @@ export async function GET({ site }: APIContext) {
 			<itunes:name>Tinkerers</itunes:name>
 			<itunes:email>podcast@tinkerers.de</itunes:email>
 		</itunes:owner>
-		<itunes:image href="${siteUrl}/cover-3000.jpg" />
+		<itunes:image href="https://cdn.tinkerers.de/podcast/cover-3000.jpg" />
 		<itunes:category text="Technology" />
 		<itunes:explicit>false</itunes:explicit>
 		<itunes:type>episodic</itunes:type>
