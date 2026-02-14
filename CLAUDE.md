@@ -112,6 +112,7 @@ Tags werden als `<itunes:keywords>` in den RSS Feed geschrieben und als Badges a
 - Große Bilder (Cover 3000px) auf CDN, kleine (512px, OG) in public/
 - Content Collection Schema: `src/content/config.ts`
 - daisyUI-Komponenten bevorzugen, kein custom CSS wenn daisyUI es kann
+- **Client-Side JS: Nur Custom Web Components** (`customElements.define` + `connectedCallback`). Kein `querySelectorAll`, kein `document.addEventListener`, kein jQuery-Style DOM-Scripting. Siehe Astro Docs: https://docs.astro.build/en/guides/client-side-scripts/#web-components-with-custom-elements
 
 ## B2 CDN Upload
 
