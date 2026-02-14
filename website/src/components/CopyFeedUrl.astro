@@ -6,58 +6,27 @@ interface Props {
 const { url } = Astro.props;
 ---
 
-<copy-feed-url data-url={url}>
+<span data-copy-feed={url}>
 	<slot />
-	<span class="copy-toast">Feed-URL kopiert!</span>
-</copy-feed-url>
-
-<style>
-	copy-feed-url {
-		position: relative;
-		cursor: pointer;
-	}
-
-	.copy-toast {
-		position: absolute;
-		top: 100%;
-		left: 50%;
-		translate: -50% 0;
-		margin-top: 0.25rem;
-		padding: 0.375rem 0.75rem;
-		border-radius: 0.375rem;
-		font-size: 0.75rem;
-		white-space: nowrap;
-		background: oklch(0.21 0.006 285.885);
-		color: oklch(0.92 0.004 264.532);
-		opacity: 0;
-		pointer-events: none;
-		transition: opacity 0.15s, translate 0.15s;
-		translate: -50% -0.25rem;
-	}
-
-	copy-feed-url[data-copied] .copy-toast {
-		opacity: 1;
-		translate: -50% 0;
-	}
-</style>
+</span>
 
 <script>
-	class CopyFeedUrl extends HTMLElement {
-		connectedCallback() {
-			this.addEventListener("click", async () => {
-				const url = this.dataset.url!;
-				try {
-					await navigator.clipboard.writeText(url);
-					this.dataset.copied = "";
-					setTimeout(() => {
-						delete this.dataset.copied;
-					}, 2000);
-				} catch {
-					window.open(url, "_blank");
-				}
-			});
-		}
-	}
+	document.querySelectorAll<HTMLElement>("[data-copy-feed]").forEach((el) => {
+		el.style.cursor = "pointer";
+		el.addEventListener("click", async () => {
+			const url = el.dataset.copyFeed!;
+			try {
+				await navigator.clipboard.writeText(url);
+			} catch {
+				window.open(url, "_blank");
+				return;
+			}
 
-	customElements.define("copy-feed-url", CopyFeedUrl);
+			const toast = document.createElement("div");
+			toast.className = "toast toast-top toast-center z-[100]";
+			toast.innerHTML = `<div class="alert alert-success"><span>Feed-URL kopiert!</span></div>`;
+			document.body.appendChild(toast);
+			setTimeout(() => toast.remove(), 2000);
+		});
+	});
 </script>
