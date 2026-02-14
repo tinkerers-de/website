@@ -6,27 +6,31 @@ interface Props {
 const { url } = Astro.props;
 ---
 
-<span data-copy-feed={url}>
+<copy-feed-url data-url={url}>
 	<slot />
-</span>
+</copy-feed-url>
 
 <script>
-	document.querySelectorAll<HTMLElement>("[data-copy-feed]").forEach((el) => {
-		el.style.cursor = "pointer";
-		el.addEventListener("click", async () => {
-			const url = el.dataset.copyFeed!;
-			try {
-				await navigator.clipboard.writeText(url);
-			} catch {
-				window.open(url, "_blank");
-				return;
-			}
+	class CopyFeedUrl extends HTMLElement {
+		connectedCallback() {
+			this.style.cursor = "pointer";
+			this.addEventListener("click", async () => {
+				const url = this.dataset.url!;
+				try {
+					await navigator.clipboard.writeText(url);
+				} catch {
+					window.open(url, "_blank");
+					return;
+				}
 
-			const toast = document.createElement("div");
-			toast.className = "toast toast-top toast-center z-[100]";
-			toast.innerHTML = `<div class="alert alert-success"><span>Feed-URL kopiert!</span></div>`;
-			document.body.appendChild(toast);
-			setTimeout(() => toast.remove(), 2000);
-		});
-	});
+				const toast = document.createElement("div");
+				toast.className = "toast toast-top toast-center z-[100]";
+				toast.innerHTML = `<div class="alert alert-success"><span>Feed-URL kopiert!</span></div>`;
+				document.body.appendChild(toast);
+				setTimeout(() => toast.remove(), 2000);
+			});
+		}
+	}
+
+	customElements.define("copy-feed-url", CopyFeedUrl);
 </script>
