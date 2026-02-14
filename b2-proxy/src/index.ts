@@ -64,7 +64,8 @@ export default {
 			}
 		}
 
-		const response = new Response(b2Response.body, {
+		const body = request.method === "HEAD" ? null : b2Response.body;
+		const response = new Response(body, {
 			status: b2Response.status,
 			headers,
 		});
