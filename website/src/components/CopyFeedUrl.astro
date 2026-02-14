@@ -1,0 +1,32 @@
+---
+interface Props {
+	url: string;
+}
+
+const { url } = Astro.props;
+---
+
+<copy-feed-url data-url={url}>
+	<slot />
+</copy-feed-url>
+
+<script>
+	class CopyFeedUrl extends HTMLElement {
+		connectedCallback() {
+			this.addEventListener("click", async () => {
+				const url = this.dataset.url!;
+				try {
+					await navigator.clipboard.writeText(url);
+					this.dataset.copied = "";
+					setTimeout(() => {
+						delete this.dataset.copied;
+					}, 2000);
+				} catch {
+					window.open(url, "_blank");
+				}
+			});
+		}
+	}
+
+	customElements.define("copy-feed-url", CopyFeedUrl);
+</script>

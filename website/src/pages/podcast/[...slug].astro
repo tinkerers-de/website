@@ -22,9 +22,38 @@ const formattedDate = date.toLocaleDateString("de-DE", {
 	day: "numeric",
 });
 const episodeNumber = String(number).padStart(3, "0");
+const siteUrl = (Astro.site?.toString() ?? "https://tinkerers.de").replace(/\/$/, "");
+const slug = episode.id.replace(/\.mdx?$/, "");
+const episodeUrl = `${siteUrl}/podcast/${slug}`;
+
+// Convert "HH:MM:SS" to ISO 8601 duration "PT1H6M20S"
+const [h, m, s] = duration.split(":").map(Number);
+const isoDuration = `PT${h ? `${h}H` : ""}${m}M${s}S`;
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "PodcastEpisode",
+	name: title,
+	description,
+	datePublished: date.toISOString().split("T")[0],
+	duration: isoDuration,
+	url: episodeUrl,
+	episodeNumber: number,
+	associatedMedia: {
+		"@type": "MediaObject",
+		contentUrl: audio.mp3.url,
+		encodingFormat: "audio/mpeg",
+	},
+	partOfSeries: {
+		"@type": "PodcastSeries",
+		name: "Tinkerers Podcast",
+		url: siteUrl,
+	},
+	author: hosts.map((name) => ({ "@type": "Person", name })),
+};
 ---
 
-<Layout title={title} description={description}>
+<Layout title={title} description={description} og={{ type: "article" }} jsonLd={jsonLd}>
 	<article>
 		<header class="mb-8">
 			<div class="flex items-baseline gap-3 mb-2">

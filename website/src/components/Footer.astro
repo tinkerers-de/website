@@ -1,8 +1,18 @@
+---
+import CopyFeedUrl from "./CopyFeedUrl.astro";
+---
+
 <footer class="footer sm:footer-horizontal bg-base-200 text-base-content border-t border-base-300 px-6 py-8 mt-20">
 	<nav>
 		<h6 class="footer-title">Tinkerers</h6>
 		<a href="/podcast/" class="link link-hover">Podcast</a>
-		<a href="/podcast/feed.xml" class="link link-hover">RSS Feed</a>
+		<CopyFeedUrl url="https://tinkerers.de/podcast/feed.xml">
+			<button type="button" class="link link-hover text-left">RSS Feed kopieren</button>
+		</CopyFeedUrl>
+	</nav>
+	<nav>
+		<h6 class="footer-title">Community</h6>
+		<a href="https://github.com/tinkerers-de/community/discussions" class="link link-hover" target="_blank" rel="noopener">Diskussionen</a>
 	</nav>
 	<nav>
 		<h6 class="footer-title">Rechtliches</h6>

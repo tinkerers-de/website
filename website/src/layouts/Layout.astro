@@ -6,11 +6,27 @@ import Footer from "../components/Footer.astro";
 interface Props {
 	title: string;
 	description?: string;
+	og?: {
+		type?: string;
+		image?: string;
+	};
+	jsonLd?: Record<string, unknown>;
+	noindex?: boolean;
 }
 
-const { title, description = "Zwei Softwareentwickler reden übers Tinkern mit AI." } = Astro.props;
+const {
+	title,
+	description = "Zwei Softwareentwickler reden übers Tinkern mit AI.",
+	og,
+	jsonLd,
+	noindex = false,
+} = Astro.props;
+
 const siteTitle = "Tinkerers Podcast";
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://tinkerers.de");
+const ogType = og?.type ?? "website";
+const ogImage = og?.image ?? new URL("/og.png", Astro.site ?? "https://tinkerers.de").toString();
 ---
 
 <!doctype html>
@@ -19,7 +35,29 @@ const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalUrl} />
 		<link rel="alternate" type="application/rss+xml" title={siteTitle} href="/podcast/feed.xml" />
+		{noindex && <meta name="robots" content="noindex" />}
+
+		<!-- Open Graph -->
+		<meta property="og:title" content={fullTitle} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content={ogType} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={ogImage} />
+		<meta property="og:locale" content="de_DE" />
+		<meta property="og:site_name" content={siteTitle} />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={fullTitle} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={ogImage} />
+
+		{jsonLd && (
+			<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+		)}
+
 		<title>{fullTitle}</title>
 	</head>
 	<body class="bg-base-100 text-base-content min-h-screen flex flex-col">
