@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
 import EpisodeCard from "../../components/EpisodeCard.astro";
+import PodcastLinks from "../../components/PodcastLinks.astro";
 
 const episodes = (await getCollection("episodes")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
@@ -25,6 +26,7 @@ const episodes = (await getCollection("episodes")).sort(
 				</p>
 			</div>
 		</div>
+		<PodcastLinks />
 	</section>
 
 	<section>
