@@ -67,7 +67,7 @@ export async function GET({ site }: APIContext) {
 	xmlns:psc="http://podlove.org/simple-chapters"
 	xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Tinkerers Podcast</title>
+		<title>Tinkerers</title>
 		<link>${siteUrl}</link>
 		<description>Zwei Softwareentwickler, Michael Heide und Levin Keller, reden übers Tinkern mit AI.</description>
 		<language>de</language>
