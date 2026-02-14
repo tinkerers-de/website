@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 
@@ -62,6 +63,7 @@ const ogImage = og?.image ?? new URL("/og.jpg", Astro.site ?? "https://tinkerers
 		)}
 
 		<title>{fullTitle}</title>
+		<ViewTransitions />
 		<script defer data-domain="tinkerers.de" src="https://analytics.levinkeller.de/js/script.js"></script>
 	</head>
 	<body class="bg-base-100 text-base-content min-h-screen flex flex-col">
