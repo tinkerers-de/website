@@ -25,7 +25,7 @@ const { url } = Astro.props;
 
 				const toast = document.createElement("div");
 				toast.className = "toast toast-top toast-center z-[100]";
-				toast.innerHTML = `<div class="alert alert-success"><span>Feed-URL kopiert!</span></div>`;
+				toast.innerHTML = `<div class="alert alert-success bg-success text-success-content shadow-lg"><span>Feed-URL kopiert!</span></div>`;
 				document.body.appendChild(toast);
 				setTimeout(() => toast.remove(), 2000);
 			});
