@@ -30,14 +30,16 @@ CDN-Pfade ebenfalls: `cdn.tinkerers.de/podcast/cover-3000.jpg`, `cdn.tinkerers.d
 ```
 website/                    # Astro Website
   src/pages/                # index.astro (Landing), podcast/, impressum
-  src/components/           # AudioPlayer, ChapterList, EpisodeCard, Navbar, Footer, CopyFeedUrl
+  src/components/           # AudioPlayer, ChapterList, EpisodeCard, Navbar, Footer
+                            # CopyFeedUrl, PodcastLinks
   src/content/episodes/     # MDX-Dateien mit Metadaten + Show Notes
   src/layouts/              # Layout.astro (SEO, OG, JSON-LD)
-  public/                   # Statische Assets (cover-512.jpg, og.jpg)
+  src/styles/               # global.css (Tailwind, daisyUI Themes, Fonts)
+  public/                   # Statische Assets (cover-512.jpg, og.jpg, favicon)
+b2-proxy/                   # Cloudflare Worker für B2 CDN Proxy
 episodes/NNN/               # Pro Episode: raw/, master.flac, encoded/, transcript.md
 artwork/                    # Podcast-Cover Originale + Mood Board
 scripts/                    # encode-episode.sh, transcribe.sh, upload-to-b2.sh, import-labels.sh
-workers/b2-proxy/           # Cloudflare Worker für B2 CDN Proxy
 ```
 
 ## Audio-Formate
@@ -58,6 +60,49 @@ workers/b2-proxy/           # Cloudflare Worker für B2 CDN Proxy
 6. `./scripts/import-labels.sh NNN` - Audacity Labels → YAML Chapters
 7. Episode MDX schreiben → PR → Merge → Auto-Deploy
 
+## Episode-Frontmatter
+
+```yaml
+number: 1
+title: "Titel"
+date: 2026-02-12
+description: "Kurzbeschreibung für RSS + OG"
+duration: "01:06:20"
+audio:
+  mp3: { url: "https://cdn.tinkerers.de/episodes/NNN/episode-NNN.mp3", size: 12345678 }
+  m4a: { url: "https://cdn.tinkerers.de/episodes/NNN/episode-NNN.m4a", size: 12345678 }
+  opus: { url: "https://cdn.tinkerers.de/episodes/NNN/episode-NNN.opus", size: 12345678 }
+chapters:
+  - time: "00:00:00"
+    title: "Intro"
+tags:
+  - AI-Coding
+  - Claude Code
+  - Softwareentwicklung
+hosts:
+  - "Michael Heide"
+  - "Levin Keller"
+```
+
+Tags werden als `<itunes:keywords>` in den RSS Feed geschrieben und als Badges auf der Detailseite angezeigt.
+
+## Podcast-Distribution
+
+- **Apple Podcasts**: podcasters.apple.com (ID: 1877323593)
+- **Spotify**: open.spotify.com/show/4iIN9c6LIYrLBHcw5JkTKq
+- **Amazon Music**: music.amazon.de/podcasts/6ab4f722-891d-4a51-b25a-1ab831bd962a
+- **Podcast Index**: podcastindex.org (automatisch: Deezer, Samsung, Pocket Casts, Overcast, Castro)
+- **YouTube Music**: Ausstehend (Google ID-Check)
+
+## Cover Art
+
+- **Original**: `artwork/podcast-cover.png` (1024x1024, ChatGPT/DALL-E)
+- **Upscale**: `artwork/podcast-cover-4096.png` (4096x4096, Upscayl)
+- **CDN**: `cdn.tinkerers.de/podcast/cover-3000.jpg` (3000x3000, für RSS/Apple/Spotify)
+- **Website**: `public/cover-512.jpg` (512x512), `public/og.jpg` (1200x630)
+- **Favicon**: `public/favicon.ico` (32x32), aus `artwork/tinkerers-logo.png`
+- **Mood Board**: `artwork/mood.md` (The Incredible Machine-Inspiration)
+
 ## Konventionen
 
 - Sprache: Deutsch (Content + Docs), Englisch (Code + Config)
@@ -66,6 +111,18 @@ workers/b2-proxy/           # Cloudflare Worker für B2 CDN Proxy
 - Raw + Master FLAC liegen in Git LFS
 - Große Bilder (Cover 3000px) auf CDN, kleine (512px, OG) in public/
 - Content Collection Schema: `src/content/config.ts`
+- daisyUI-Komponenten bevorzugen, kein custom CSS wenn daisyUI es kann
+
+## B2 CDN Upload
+
+Für Dateien die auf den CDN sollen (Audio, große Bilder):
+```bash
+# Episode-Audio
+./scripts/upload-to-b2.sh NNN
+
+# Einzelne Datei: B2 API direkt (siehe scripts/upload-to-b2.sh als Referenz)
+# Pfad-Konvention: episodes/NNN/... oder podcast/...
+```
 
 ## Commands
 
