@@ -26,7 +26,7 @@ const siteTitle = "Tinkerers Podcast";
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? "https://tinkerers.de");
 const ogType = og?.type ?? "website";
-const ogImage = og?.image ?? new URL("/og.png", Astro.site ?? "https://tinkerers.de").toString();
+const ogImage = og?.image ?? new URL("/og.jpg", Astro.site ?? "https://tinkerers.de").toString();
 ---
 
 <!doctype html>

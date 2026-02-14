@@ -15,7 +15,7 @@ function toRfc2822(date: Date): string {
 }
 
 export async function GET({ site }: APIContext) {
-	const siteUrl = site?.toString() ?? "https://tinkerers.de";
+	const siteUrl = (site?.toString() ?? "https://tinkerers.de").replace(/\/$/, "");
 	const episodes = (await getCollection("episodes")).sort(
 		(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 	);
@@ -79,6 +79,7 @@ export async function GET({ site }: APIContext) {
 			<itunes:name>Tinkerers</itunes:name>
 			<itunes:email>podcast@tinkerers.de</itunes:email>
 		</itunes:owner>
+		<itunes:image href="${siteUrl}/cover-3000.jpg" />
 		<itunes:category text="Technology" />
 		<itunes:explicit>false</itunes:explicit>
 		<itunes:type>episodic</itunes:type>
