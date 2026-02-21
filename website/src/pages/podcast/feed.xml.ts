@@ -30,7 +30,9 @@ export async function GET({ site }: APIContext) {
 			const chaptersXml =
 				chapters.length > 0
 					? `<podcast:chapters type="application/json" url="${episodeUrl}/chapters.json" />
-			${chapters.map((ch) => `<psc:chapter start="${ch.time}" title="${escapeXml(ch.title)}"${ch.url ? ` href="${escapeXml(ch.url)}"` : ""} />`).join("\n\t\t\t")}`
+			<psc:chapters version="1.2">
+				${chapters.map((ch) => `<psc:chapter start="${ch.time}" title="${escapeXml(ch.title)}"${ch.url ? ` href="${escapeXml(ch.url)}"` : ""} />`).join("\n\t\t\t\t")}
+			</psc:chapters>`
 					: "";
 
 			return `
