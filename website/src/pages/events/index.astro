@@ -1,0 +1,85 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import EventListItem from "../../components/EventListItem.astro";
+
+const allEvents = await getCollection("events");
+const sorted = allEvents.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+const now = Date.now();
+const upcoming = sorted.filter(
+	(event) => !event.data.cancelled && event.data.date.valueOf() >= now,
+);
+const past = sorted
+	.filter((event) => event.data.date.valueOf() < now || event.data.cancelled)
+	.reverse();
+
+const chapterNames = new Map<string, string>();
+for (const event of sorted) {
+	if (chapterNames.has(event.data.chapter)) continue;
+	const chapter = await getEntry("chapters", event.data.chapter);
+	if (chapter) chapterNames.set(event.data.chapter, chapter.data.name);
+}
+---
+
+<Layout
+	title="Termine"
+	description="Alle anstehenden und vergangenen Tinkerers-Treffen über alle Chapter hinweg."
+>
+	<section class="mb-10">
+		<h1 class="text-3xl font-bold tracking-tight mb-2">Termine</h1>
+		<p class="text-base-content/70 max-w-2xl">
+			Alle Tinkerers-Treffen quer über die Chapter. Geplante Termine oben,
+			Rückblick darunter.
+		</p>
+	</section>
+
+	{upcoming.length > 0 ? (
+		<section class="mb-12">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Kommend
+			</h2>
+			<div class="space-y-4">
+				{upcoming.map((event) => (
+					<EventListItem
+						slug={event.slug}
+						title={event.data.title}
+						date={event.data.date}
+						location={event.data.location}
+						chapterName={chapterNames.get(event.data.chapter)}
+						cancelled={event.data.cancelled}
+					/>
+				))}
+			</div>
+		</section>
+	) : (
+		<section class="mb-12">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Kommend
+			</h2>
+			<p class="text-sm text-base-content/60">
+				Aktuell ist kein Termin angekündigt. Schaut bald wieder vorbei.
+			</p>
+		</section>
+	)}
+
+	{past.length > 0 && (
+		<section>
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Rückblick
+			</h2>
+			<div class="space-y-4">
+				{past.map((event) => (
+					<EventListItem
+						slug={event.slug}
+						title={event.data.title}
+						date={event.data.date}
+						location={event.data.location}
+						chapterName={chapterNames.get(event.data.chapter)}
+						cancelled={event.data.cancelled}
+					/>
+				))}
+			</div>
+		</section>
+	)}
+</Layout>

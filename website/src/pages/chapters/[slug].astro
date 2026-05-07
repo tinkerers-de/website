@@ -1,0 +1,132 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import EventListItem from "../../components/EventListItem.astro";
+
+export async function getStaticPaths() {
+	const chapters = await getCollection("chapters");
+	return chapters.map((chapter) => ({
+		params: { slug: chapter.slug },
+		props: { chapter },
+	}));
+}
+
+const { chapter } = Astro.props;
+const { Content } = await chapter.render();
+
+const allEvents = await getCollection("events");
+const events = allEvents
+	.filter((event) => event.data.chapter === chapter.slug)
+	.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
+
+const now = Date.now();
+const upcoming = events.filter(
+	(event) => !event.data.cancelled && event.data.date.valueOf() >= now,
+);
+const past = events
+	.filter((event) => event.data.date.valueOf() < now || event.data.cancelled)
+	.reverse();
+---
+
+<Layout
+	title={`Chapter ${chapter.data.name}`}
+	description={`Tinkerers-Chapter ${chapter.data.name} — ${chapter.data.location}.`}
+>
+	<section class="mb-10">
+		<a href="/chapters/" class="text-sm text-base-content/60 hover:text-primary transition-colors">
+			&larr; Alle Chapters
+		</a>
+		<h1 class="text-3xl font-bold tracking-tight mt-3 mb-2">
+			Chapter {chapter.data.name}
+		</h1>
+		<p class="text-base-content/70">
+			{chapter.data.location}
+			{chapter.data.region && <> &middot; {chapter.data.region}</>}
+		</p>
+		{chapter.data.moderators.length > 0 && (
+			<p class="text-sm text-base-content/60 mt-1">
+				Moderation: {chapter.data.moderators.join(", ")}
+			</p>
+		)}
+	</section>
+
+	<section class="prose prose-sm max-w-none mb-10">
+		<Content />
+	</section>
+
+	<section class="mb-10">
+		<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+			Pitches
+		</h2>
+		<div class="card bg-base-200 border border-base-300">
+			<div class="card-body p-6">
+				<p class="text-sm text-base-content/70 mb-3">
+					Ideen für die nächsten Treffen sammeln wir öffentlich auf GitHub.
+					Jede:r kann mitlesen und kommentieren.
+				</p>
+				<a
+					href={chapter.data.pitchesUrl}
+					class="btn btn-primary btn-sm w-fit"
+					target="_blank"
+					rel="noopener"
+				>
+					Pitches auf GitHub &rarr;
+				</a>
+				<p class="text-xs text-base-content/50 mt-3">
+					Kein GitHub-Account? Kein Problem &mdash; kommt zum Treffen, erzählt
+					eure Idee, wir tragen sie für euch ein.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	{upcoming.length > 0 && (
+		<section class="mb-10">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Kommende Termine
+			</h2>
+			<div class="space-y-4">
+				{upcoming.map((event) => (
+					<EventListItem
+						slug={event.slug}
+						title={event.data.title}
+						date={event.data.date}
+						location={event.data.location}
+						cancelled={event.data.cancelled}
+					/>
+				))}
+			</div>
+		</section>
+	)}
+
+	{upcoming.length === 0 && (
+		<section class="mb-10">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Kommende Termine
+			</h2>
+			<p class="text-sm text-base-content/60">
+				Aktuell ist kein Termin geplant. Sobald wir den nächsten festlegen,
+				findet ihr ihn hier.
+			</p>
+		</section>
+	)}
+
+	{past.length > 0 && (
+		<section>
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-4">
+				Rückblick
+			</h2>
+			<div class="space-y-4">
+				{past.map((event) => (
+					<EventListItem
+						slug={event.slug}
+						title={event.data.title}
+						date={event.data.date}
+						location={event.data.location}
+						cancelled={event.data.cancelled}
+					/>
+				))}
+			</div>
+		</section>
+	)}
+</Layout>

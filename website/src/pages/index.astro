@@ -7,6 +7,14 @@ const episodes = (await getCollection("episodes")).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 const episodeCount = episodes.length;
+
+const chapters = await getCollection("chapters");
+const chapterCount = chapters.length;
+
+const now = Date.now();
+const upcomingEventCount = (await getCollection("events")).filter(
+	(event) => !event.data.cancelled && event.data.date.valueOf() >= now,
+).length;
 ---
 
 <Layout title="Tinkerers">
@@ -32,7 +40,7 @@ const episodeCount = episodes.length;
 		</h2>
 
 		<!-- Podcast -->
-		<div class="card bg-base-200 border border-base-300">
+		<div class="card bg-base-200 border border-base-300 mb-4">
 			<a href="/podcast/" class="card-body flex-row items-center gap-6 hover:opacity-80 transition-opacity">
 				<img
 					src="/cover-512.jpg"
@@ -54,6 +62,25 @@ const episodeCount = episodes.length;
 				<PodcastLinks />
 			</div>
 		</div>
+
+		<!-- Chapters -->
+		<a href="/chapters/" class="block group">
+			<div class="card bg-base-200 border border-base-300 transition-all hover:border-primary/50 hover:scale-[1.005]">
+				<div class="card-body p-6">
+					<h3 class="card-title text-xl group-hover:text-primary transition-colors">
+						Chapters — Treffen vor Ort
+					</h3>
+					<p class="text-base-content/60">
+						Lokale Tinkerers-Gruppen, die regelmäßig zusammenkommen und
+						gemeinsam mit KI an konkreten Ideen aus der Nachbarschaft bauen.
+						{chapterCount} {chapterCount === 1 ? "Chapter" : "Chapters"}
+						{upcomingEventCount > 0 && (
+							<>, {upcomingEventCount} kommende{upcomingEventCount === 1 ? "r" : ""} {upcomingEventCount === 1 ? "Termin" : "Termine"}</>
+						)}.
+					</p>
+				</div>
+			</div>
+		</a>
 	</section>
 
 	<!-- Mitmachen -->

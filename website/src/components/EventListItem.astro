@@ -1,0 +1,41 @@
+---
+interface Props {
+	slug: string;
+	title: string;
+	date: Date;
+	location: string;
+	chapterName?: string;
+	cancelled?: boolean;
+}
+
+const { slug, title, date, location, chapterName, cancelled = false } = Astro.props;
+
+const formattedDate = date.toLocaleDateString("de-DE", {
+	weekday: "long",
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+---
+
+<a href={`/events/${slug}/`} class="block group">
+	<article class="card bg-base-200 border border-base-300 transition-all hover:border-primary/50 hover:scale-[1.005]">
+		<div class="card-body p-6">
+			<div class="flex items-baseline gap-3 mb-1 flex-wrap">
+				<time class="text-xs text-base-content/60 font-medium" datetime={date.toISOString()}>
+					{formattedDate}
+				</time>
+				{chapterName && (
+					<span class="badge badge-primary badge-sm">{chapterName}</span>
+				)}
+				{cancelled && (
+					<span class="badge badge-error badge-sm">abgesagt</span>
+				)}
+			</div>
+			<h2 class={`card-title text-lg group-hover:text-primary transition-colors ${cancelled ? "line-through" : ""}`}>
+				{title}
+			</h2>
+			<p class="text-sm text-base-content/60">{location}</p>
+		</div>
+	</article>
+</a>
