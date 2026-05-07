@@ -3,7 +3,8 @@ name: "Nordstemmen"
 location: "Nordstemmen / Rössing"
 region: "Region Hannover & Hildesheim"
 moderators:
-  - "Levin Keller"
+  - "Manuel Fischer"
+  - "Luca Elbeshausen"
 ---
 
 Das Chapter Nordstemmen ist eine offene Tinkerers-Gruppe für alle, die in
