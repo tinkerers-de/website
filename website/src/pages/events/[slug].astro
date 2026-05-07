@@ -1,0 +1,82 @@
+---
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+	const events = await getCollection("events");
+	return events.map((event) => ({
+		params: { slug: event.slug },
+		props: { event },
+	}));
+}
+
+const { event } = Astro.props;
+const { Content } = await event.render();
+const chapter = await getEntry("chapters", event.data.chapter);
+
+const fullDate = event.data.date.toLocaleDateString("de-DE", {
+	weekday: "long",
+	year: "numeric",
+	month: "long",
+	day: "numeric",
+});
+
+const isPast = event.data.date.valueOf() < Date.now();
+---
+
+<Layout
+	title={event.data.title}
+	description={`${fullDate} — ${event.data.location}`}
+>
+	<section class="mb-8">
+		<a href="/events/" class="text-sm text-base-content/60 hover:text-primary transition-colors">
+			&larr; Alle Termine
+		</a>
+		<div class="flex items-baseline gap-3 mt-3 mb-2 flex-wrap">
+			<time class="text-sm text-base-content/60 font-medium" datetime={event.data.date.toISOString()}>
+				{fullDate}
+			</time>
+			{chapter && (
+				<a href={`/chapters/${chapter.slug}/`} class="badge badge-primary badge-sm hover:opacity-80 transition-opacity">
+					{chapter.data.name}
+				</a>
+			)}
+			{event.data.cancelled && (
+				<span class="badge badge-error badge-sm">abgesagt</span>
+			)}
+			{isPast && !event.data.cancelled && (
+				<span class="badge badge-ghost badge-sm">vergangen</span>
+			)}
+		</div>
+		<h1 class={`text-3xl font-bold tracking-tight mb-2 ${event.data.cancelled ? "line-through" : ""}`}>
+			{event.data.title}
+		</h1>
+		<p class="text-base-content/70">{event.data.location}</p>
+	</section>
+
+	<section class="prose prose-sm max-w-none mb-10">
+		<Content />
+	</section>
+
+	{event.data.links.length > 0 && (
+		<section class="mb-10">
+			<h2 class="text-sm font-semibold uppercase tracking-wider text-base-content/40 mb-3">
+				Material & Links
+			</h2>
+			<ul class="space-y-2">
+				{event.data.links.map((link) => (
+					<li>
+						<a
+							href={link.url}
+							class="link link-primary text-sm"
+							target="_blank"
+							rel="noopener"
+						>
+							{link.label} &rarr;
+						</a>
+					</li>
+				))}
+			</ul>
+		</section>
+	)}
+</Layout>
