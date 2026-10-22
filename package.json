@@ -1,7 +1,10 @@
 {
   "name": "tinkerers",
   "private": true,
-  "workspaces": ["website", "b2-proxy"],
+  "workspaces": [
+    "website",
+    "b2-proxy"
+  ],
   "scripts": {
     "dev": "npm run dev -w website",
     "build": "npm run build -w website",
@@ -10,6 +13,6 @@
     "lint": "biome lint ."
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4"
+    "@biomejs/biome": "1.9.4"
   }
 }
