@@ -1,10 +1,10 @@
 {
     "name": "Node.js & TypeScript",
-    "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
+    "image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm@sha256:7c2e711a4f7b02f32d2da16192d5e05aa7c95279be4ce889cff5df316f251c1d",
     "features": {
-        "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1": {},
-        "ghcr.io/devcontainers/features/git-lfs:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {}
+        "ghcr.io/devcontainer-community/devcontainer-features/zellij.dev:1@sha256:e7567ff16ca87c592c5a9ed9f72a85903b3fddb24d90a2e3a1586821dbba8433": {},
+        "ghcr.io/devcontainers/features/git-lfs:1@sha256:71c2b371cf12ab7fcec47cf17369c6f59156100dad9abf9e4c593049d789de72": {},
+        "ghcr.io/devcontainers/features/github-cli:1@sha256:bd7ab48a832228f633239277552c30b353867fef2e5b037e064b4e64f0b843f2": {}
     },
     "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ffmpeg",
     "customizations": {
