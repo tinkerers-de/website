@@ -1,6 +1,6 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"description": "Hält npm-Pakete (Astro-Website, B2-Proxy-Worker), Devcontainer-Image und -Features aktuell. Es gibt keine PR-Checks, daher bleiben Update-PRs zum manuellen Mergen liegen.",
+	"description": "Hält npm-Pakete (Astro-Website, B2-Proxy-Worker), Devcontainer-Image und -Features aktuell. Gemerged wird automatisch nur, wenn am PR alle Checks grün sind (Cloudflare Workers Build der Website).",
 	"extends": ["config:recommended", ":disableDependencyDashboard"],
 	"timezone": "Europe/Berlin",
 	"labels": ["dependencies"],
